@@ -2,9 +2,9 @@ import * as Comlink from "comlink";
 import { TypeExtractor } from "peggy-to-ts";
 
 const exposed = {
-    parse: (s: string) => {
+    parse: (s: string, options?: TypeExtractor["options"]) => {
         try {
-            const typeExtractor = new TypeExtractor(s);
+            const typeExtractor = new TypeExtractor(s, options);
             const ret = typeExtractor.getTypes();
             return ret;
         } catch (e: any) {

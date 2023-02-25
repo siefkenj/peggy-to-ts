@@ -1,4 +1,5 @@
 import { Actions } from "easy-peasy";
+import { TypeExtractor } from "peggy-to-ts";
 import { parsingWorker } from "../worker/worker-wrapper";
 import { StoreModel } from "./model";
 
@@ -13,7 +14,8 @@ let renderQueue: string | null = null;
  */
 export async function debounceRender(
     actions: Actions<StoreModel>,
-    payload: string
+    payload: string,
+    options: TypeExtractor["options"]
 ) {
     renderQueue = payload;
     async function doRender() {
@@ -23,7 +25,7 @@ export async function debounceRender(
         try {
             isInRender = true;
             const text = renderQueue;
-            const generatedTypes = await parsingWorker.parse(text);
+            const generatedTypes = await parsingWorker.parse(text, options);
             // Some other thread may have decided to render in the mean time.
             // Make sure we are the most current before we actually go setting things.
             actions.setError(null);
@@ -44,7 +46,7 @@ export async function debounceRender(
     } else {
         await new Promise((resolve) => setTimeout(resolve, maxDelay));
         if (renderQueue) {
-            debounceRender(actions, renderQueue);
+            debounceRender(actions, renderQueue, options);
         }
     }
 }

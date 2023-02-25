@@ -3,7 +3,6 @@ import { isParseError } from "../worker/errors";
 import { debounceRender } from "./debounce-render";
 import { StoreModel } from "./model";
 
-
 export const store = createStore<StoreModel>({
     editorText: `a = "a" b:b? { return ['a', b]; }
 b = "b" a:a? { return ['b', a]; }
@@ -12,10 +11,10 @@ b = "b" a:a? { return ['b', a]; }
     setEditorText: action((state, payload) => {
         state.editorText = payload;
     }),
-    editorChange: thunk(async (actions, payload) => {
+    editorChange: thunk(async (actions, payload, { getState }) => {
         actions.setEditorText(payload);
         try {
-            await debounceRender(actions, payload);
+            await debounceRender(actions, payload, getState().options);
             //   const generatedTypes = await parsingWorker.parse(payload);
             //   actions.setError(null);
             //   actions.setGeneratedTypes(generatedTypes);
@@ -34,5 +33,13 @@ b = "b" a:a? { return ['b', a]; }
     generatedTypes: "",
     setGeneratedTypes: action((state, payload) => {
         state.generatedTypes = payload;
+    }),
+    options: { camelCaseTypeNames: true, removeReadonlyKeyword: true },
+    _setOptions: action((state, payload) => {
+        Object.assign(state.options, payload);
+    }),
+    setOptions: thunk((actions, payload, { getState }) => {
+        actions._setOptions(payload);
+        actions.editorChange(getState().editorText);
     }),
 });
