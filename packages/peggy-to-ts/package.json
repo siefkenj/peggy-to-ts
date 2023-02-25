@@ -1,14 +1,25 @@
 {
-    "name": "peggy-to-ts-workspace",
-    "private": true,
+    "name": "peggy-to-ts",
     "version": "1.0.0",
-    "description": "Create Typescript types from PEGjs/Peggy grammars",
-    "workspaces": [
-        "./packages/peggy-to-ts"
-    ],
+    "description": "Generate Typescript types from PEGjs/Peggy grammars",
+    "main": "dist/index.js",
+    "type": "module",
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        },
+        "./*js": "./dist/*js",
+        "./*": {
+            "import": "./dist/*.js",
+            "require": "./dist/*.cjs"
+        }
+    },
     "scripts": {
-        "build": "npm run build -ws",
-        "test": "jest "
+        "build": "npm run clean && mkdirp ./dist && npm run compile",
+        "clean": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
+        "compile": "tsc -b tsconfig.json & node build.js & wait",
+        "test": "jest"
     },
     "jest": {
         "transformIgnorePatterns": [
@@ -16,7 +27,7 @@
         ],
         "transform": {
             "\\.m?jsx?$": "esbuild-jest",
-            "\\.pegjs$": "<rootDir>/lambda-calculus-interpreter/tests/pegjs-preprocessor.cjs",
+            "\\.peg(js|gy)$": "<rootDir>/tests/pegjs-preprocessor.mjs",
             "^.+\\.tsx?$": "ts-jest"
         },
         "haste": {
@@ -28,16 +39,15 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/siefkenj/typescript-xml.git"
+        "url": "git+https://github.com/siefkenj/peggy-to-ts.git"
     },
     "author": "",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/siefkenj/typescript-xml/issues"
+        "url": "https://github.com/siefkenj/peggy-to-ts/issues"
     },
-    "homepage": "https://github.com/siefkenj/typescript-xml#readme",
+    "homepage": "https://github.com/siefkenj/peggy-to-ts#readme",
     "devDependencies": {
-        "@types/glob": "^8.0.1",
         "@types/jest": "^29.4.0",
         "@types/node": "^18.14.0",
         "esbuild": "^0.17.9",
