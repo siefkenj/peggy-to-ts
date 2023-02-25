@@ -3,10 +3,12 @@ import { isParseError } from "../worker/errors";
 import { debounceRender } from "./debounce-render";
 import { StoreModel } from "./model";
 
-export const store = createStore<StoreModel>({
-    editorText: `a = "a" b:b? { return ['a', b]; }
+const DEFAULT_GRAMMAR = `a = "a" b:b? { return ['a', b]; }
 b = "b" a:a? { return ['b', a]; }
-`,
+`;
+
+export const store = createStore<StoreModel>({
+    editorText: DEFAULT_GRAMMAR,
     error: null,
     setEditorText: action((state, payload) => {
         state.editorText = payload;
