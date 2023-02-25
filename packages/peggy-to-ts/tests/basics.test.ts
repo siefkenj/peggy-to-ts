@@ -142,6 +142,13 @@ describe("Basic Parsing", () => {
             `type Start = "b"`
         );
     });
+    it("can create type from simple return type", () => {
+        const typeExtractor = new TypeExtractor(`Start = x:"a" { return x; }`);
+        typeExtractor.getTypes();
+        expect(typeExtractor.typeCache.get("Start")).toEqual(
+            `type Start = "a"`
+        );
+    });
 });
 
 describe("Util tests", () => {
