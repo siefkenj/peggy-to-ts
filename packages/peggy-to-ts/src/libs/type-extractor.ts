@@ -400,6 +400,7 @@ export class TypeExtractor {
             });
         }
 
+        finalTypeNode = finalType.getTypeNodeOrThrow();
         return finalTypeNode.getText();
     }
 }
