@@ -8,7 +8,7 @@
     ],
     "scripts": {
         "build": "npm run build -ws",
-        "test": "jest "
+        "test": "npm run test -ws"
     },
     "jest": {
         "transformIgnorePatterns": [
