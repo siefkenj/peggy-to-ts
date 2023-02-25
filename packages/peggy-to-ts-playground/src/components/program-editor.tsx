@@ -6,6 +6,7 @@ import { useStoreActions, useStoreState } from "../store/hooks";
 import { HelpModal } from "./help-modal";
 import { StreamLanguage } from "@codemirror/language";
 import { NotesDisplay } from "./info-display";
+import { EditorView } from "@codemirror/view";
 
 export function GrammarEditor() {
     const hasRendered = React.useRef(false);
@@ -19,6 +20,7 @@ export function GrammarEditor() {
         onChange: (text) => editorChange(text),
         extensions: [basicSetup(), StreamLanguage.define(pegjs)],
         style: { height: "100%", overflow: "hidden" },
+        theme: { extension: EditorView.theme({ "&": { fontSize: "10pt" } }) },
     });
 
     React.useEffect(() => {

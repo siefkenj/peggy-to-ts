@@ -3,6 +3,7 @@ import { basicSetup, useCodeMirror } from "@uiw/react-codemirror";
 import React from "react";
 import { Card } from "react-bootstrap";
 import { useStoreState } from "../store/hooks";
+import { EditorView } from "@codemirror/view";
 
 export function ResultsDisplay() {
     const parsed = useStoreState((state) => state.generatedTypes);
@@ -12,6 +13,7 @@ export function ResultsDisplay() {
         value: parsed,
         extensions: [basicSetup(), javascript({ typescript: true })],
         style: { height: "100%", overflow: "hidden" },
+        theme: { extension: EditorView.theme({ "&": { fontSize: "10pt" } }) },
     });
 
     return (
