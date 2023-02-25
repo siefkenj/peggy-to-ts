@@ -6,14 +6,14 @@ import { useStoreActions, useStoreState } from "../store/hooks";
 import { HelpModal } from "./help-modal";
 import { StreamLanguage } from "@codemirror/language";
 import { NotesDisplay } from "./info-display";
-import { javascript } from "@codemirror/lang-javascript";
 
 export function GrammarEditor() {
+    const hasRendered = React.useRef(false);
     const [helpShow, setHelpShow] = React.useState(false);
     const editorText = useStoreState((state) => state.editorText);
     const editorChange = useStoreActions((actions) => actions.editorChange);
     const editorRef = React.useRef<HTMLDivElement>(null);
-    const editor = useCodeMirror({
+    useCodeMirror({
         container: editorRef.current,
         value: editorText,
         onChange: (text) => editorChange(text),
@@ -22,10 +22,14 @@ export function GrammarEditor() {
     });
 
     React.useEffect(() => {
-        editorChange(editorText);
         // This is a one time effect only, just to get an initial render.
         // So we purposely have no effect triggers.
-    }, []);
+        if (hasRendered.current) {
+            return;
+        }
+        hasRendered.current = true;
+        editorChange(editorText);
+    }, [editorChange, editorText]);
 
     return (
         <Card>

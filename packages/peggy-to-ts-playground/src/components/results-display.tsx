@@ -7,7 +7,7 @@ import { useStoreState } from "../store/hooks";
 export function ResultsDisplay() {
     const parsed = useStoreState((state) => state.generatedTypes);
     const editorRef = React.useRef<HTMLDivElement>(null);
-    const editor = useCodeMirror({
+    useCodeMirror({
         container: editorRef.current,
         value: parsed,
         extensions: [basicSetup(), javascript({ typescript: true })],

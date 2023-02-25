@@ -1,6 +1,5 @@
 import { action, createStore, thunk } from "easy-peasy";
 import { isParseError } from "../worker/errors";
-import { parsingWorker } from "../worker/worker-wrapper";
 import { debounceRender } from "./debounce-render";
 import { StoreModel } from "./model";
 

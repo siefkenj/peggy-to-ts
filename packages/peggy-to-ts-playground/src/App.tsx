@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { GrammarEditor } from "./components/program-editor";
 import { ResultsDisplay } from "./components/results-display";
 
