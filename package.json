@@ -16,7 +16,7 @@
         ],
         "transform": {
             "\\.m?jsx?$": "esbuild-jest",
-            "\\.pegjs$": "<rootDir>/lambda-calculus-interpreter/tests/pegjs-preprocessor.cjs",
+            "\\.pegjs$": "<rootDir>/packages/peggy-to-ts/tests/pegjs-preprocessor.mjs",
             "^.+\\.tsx?$": "ts-jest"
         },
         "haste": {
