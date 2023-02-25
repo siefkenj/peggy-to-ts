@@ -6,7 +6,6 @@
         "**/tests/",
         "**/dist/**/*"
     ],
-    //"include": ["lambda-calculus-interpreter/src/**/*.ts"],
     "compilerOptions": {
         /* Visit https://aka.ms/tsconfig to read more about this file */
 

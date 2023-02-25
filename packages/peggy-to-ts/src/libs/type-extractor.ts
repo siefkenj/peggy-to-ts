@@ -119,7 +119,8 @@ export class TypeExtractor {
     getTypes() {
         const file = this.project.createSourceFile(
             "__types__.ts",
-            TYPES_HEADER
+            TYPES_HEADER,
+            { overwrite: true }
         );
 
         file.addTypeAliases(
@@ -284,10 +285,19 @@ export class TypeExtractor {
                 return expr.alternatives
                     .map((e) => `(${this.getTypeForExpression(e)})`)
                     .join(" | ");
-            case "sequence":
+            case "sequence": {
+                // If a sequence has a pluck operator, the type is the type
+                // of that item. Otherwise, the type is an array of all items
+                const pickedElement = expr.elements.find(
+                    (e) => e.type === "labeled" && e.pick
+                );
+                if (pickedElement) {
+                    return this.getTypeForExpression(pickedElement);
+                }
                 return `[ ${expr.elements
                     .map((e) => this.getTypeForExpression(e))
                     .join(" , ")} ]`;
+            }
             case "simple_and":
             case "simple_not":
                 return "undefined";

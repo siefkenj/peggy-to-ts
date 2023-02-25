@@ -135,6 +135,13 @@ describe("Basic Parsing", () => {
             `type A = ["A", A_1 | undefined]`
         );
     });
+    it("type of pluck operator `@` computed correctly", () => {
+        const typeExtractor = new TypeExtractor(`Start = "a" @"b"`);
+        typeExtractor.getTypes();
+        expect(typeExtractor.typeCache.get("Start")).toEqual(
+            `type Start = "b"`
+        );
+    });
 });
 
 describe("Util tests", () => {

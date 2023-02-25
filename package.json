@@ -4,7 +4,8 @@
     "version": "1.0.0",
     "description": "Create Typescript types from PEGjs/Peggy grammars",
     "workspaces": [
-        "./packages/peggy-to-ts"
+        "./packages/peggy-to-ts",
+        "./packages/peggy-to-ts-playground"
     ],
     "scripts": {
         "build": "npm run build -ws",
@@ -50,8 +51,24 @@
         "typescript": "^4.9.5"
     },
     "dependencies": {
-        "prettier": "^2.8.4",
+        "@codemirror/lang-javascript": "^6.1.4",
+        "@codemirror/language": "^6.6.0",
+        "@codemirror/legacy-modes": "^6.3.1",
+        "@types/react": "^18.0.28",
+        "@types/react-dom": "^18.0.11",
+        "@uiw/react-codemirror": "^4.19.9",
+        "comlink": "^4.4.1",
+        "easy-peasy": "^5.2.0",
         "peggy": "^2.0.1",
-        "ts-morph": "^17.0.1"
+        "prettier": "^2.8.4",
+        "react": "^18.2.0",
+        "react-app-rewired": "^2.2.1",
+        "react-bootstrap": "^2.7.2",
+        "react-dom": "^18.2.0",
+        "react-scripts": "^5.0.1",
+        "ts-morph": "^17.0.1",
+        "web-vitals": "^3.1.1",
+        "worker-plugin": "^5.0.1",
+        "workerize-loader": "^2.0.2"
     }
 }
