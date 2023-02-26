@@ -29,6 +29,10 @@ const typeExtractor = new TypeExtractor(grammarSourceCode);
 console.log("The generated types are:", typeExtractor.getTypes());
 ```
 
+By default, the type of the first rule is the only exported rule. To export other
+rules, pass in an array of `allowedStartRules` by name. E.g., `typeExtractor.getTypes(["rule1", "rule5"])`
+will export the types for `Rule1` and `Rule5`.
+
 ### Providing type hints
 
 If your grammar's actions (the things that look like `{ return ...}`) contain arbitrary
@@ -79,10 +83,7 @@ Foo = x:Bar? y:Baz { return x ? x : y; }
 A function is created
 
 ```typescript
-function tmpFunction<T_0 extends Bar | null, T_1 extends Baz>(
-    x: T_0,
-    y: T_1
-) {
+function tmpFunction<T_0 extends Bar | null, T_1 extends Baz>(x: T_0, y: T_1) {
     return x ? x : y;
 }
 ```
@@ -120,7 +121,9 @@ transforms will result in Typescript types that are recursive in a way that Type
 cannot handle. For example,
 
 ```pegjs
-Start = "a" / "(" s:Start ")" { return s }
+Start
+    = "a"
+    / "(" s:Start ")" { return s; }
 ```
 
 results in
