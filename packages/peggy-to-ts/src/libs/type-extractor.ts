@@ -1,6 +1,10 @@
 import { Project, ScriptTarget, ts } from "ts-morph";
 import { ActionExpression, Expression, Grammar, Rule } from "../types";
-import { getEnclosingFunction, wrapNodeInAsConstDeclaration } from "./helpers";
+import {
+    getEnclosingFunction,
+    isLiteral,
+    wrapNodeInAsConstDeclaration,
+} from "./helpers";
 import prettier from "prettier/standalone";
 import * as prettierPluginTypescript from "prettier/parser-typescript";
 import { snakeToCamel } from "./snake-to-camel";
@@ -347,15 +351,7 @@ export class TypeExtractor {
                     return;
                 }
                 const returnExpression = r.getExpression();
-                if (
-                    returnExpression &&
-                    (returnExpression.isKind(
-                        ts.SyntaxKind.ObjectLiteralExpression
-                    ) ||
-                        returnExpression.isKind(
-                            ts.SyntaxKind.ArrayLiteralExpression
-                        ))
-                ) {
+                if (isLiteral(returnExpression)) {
                     wrapNodeInAsConstDeclaration(returnExpression);
                 }
             });
