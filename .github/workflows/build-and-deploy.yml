@@ -38,7 +38,7 @@ jobs:
               if: ${{ github.event_name == 'push' }}
               uses: actions/upload-pages-artifact@v1
               with:
-                  path: ./packages/peggy-to-ts-playground/build
+                  path: ./packages/peggy-to-ts-playground/dist
     deploy:
         environment:
             name: github-pages
