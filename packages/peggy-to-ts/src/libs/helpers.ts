@@ -67,13 +67,11 @@ export function makeTypeAnArray(typeNode: TypeNode) {
  * (E.g., if you obtained a reference via `typeDeclaration.getType()`, you must do so again,
  * because the old reference will be stale.)
  */
-export function unionWithUndefined(typeNode: TypeNode) {
-    return typeNode.transform((traversal) =>
-        traversal.factory.createUnionTypeNode([
+export function unionWithNull(typeNode: TypeNode) {
+    return typeNode.transform((t) =>
+        t.factory.createUnionTypeNode([
             typeNode.compilerNode,
-            traversal.factory.createKeywordTypeNode(
-                ts.SyntaxKind.UndefinedKeyword
-            ),
+            t.factory.createLiteralTypeNode(t.factory.createNull()),
         ])
     );
 }
@@ -97,4 +95,12 @@ export function isLiteral(
         node.isKind(ts.SyntaxKind.ArrayLiteralExpression) ||
         node.isKind(ts.SyntaxKind.NumericLiteral)
     );
+}
+
+/**
+ * Returns a union type with all duplicate entries removed.
+ */
+export function formatUnionType(subtypes: string[]): string {
+    const uniqueTypes = Array.from(new Set(subtypes));
+    return uniqueTypes.join(" | ");
 }

@@ -1,6 +1,7 @@
 import { Project, ScriptTarget, ts } from "ts-morph";
 import { ActionExpression, Expression, Grammar, Rule } from "../types";
 import {
+    formatUnionType,
     getEnclosingFunction,
     isLiteral,
     wrapNodeInAsConstDeclaration,
@@ -27,6 +28,9 @@ declare function text(): string;
 declare function location(): { source: string | undefined; start: { offset: number; line: number; column: number }; end: { offset: number; line: number; column: number } };
 declare function offset(): { offset: number; line: number; column: number };
 declare function range(): {source: string | undefined, start: number, end: number};
+
+// We need an export, otherwise typescript will insist that "location" refers to "window.location"
+export {};
 `;
 
 /**
@@ -70,7 +74,11 @@ export class TypeExtractor {
     grammar: Grammar;
     sourceHeader = SOURCE_HEADER;
     project = new Project({
-        compilerOptions: { allowJs: true, target: ScriptTarget.ESNext },
+        compilerOptions: {
+            allowJs: true,
+            target: ScriptTarget.ESNext,
+            strict: true,
+        },
         skipAddingFilesFromTsConfig: true,
         skipFileDependencyResolution: true,
         useInMemoryFileSystem: true,
@@ -110,14 +118,32 @@ export class TypeExtractor {
     /**
      * Create typescript source code for the types in the grammar.
      */
-    getTypes() {
+    getTypes(allowedStartRules?: string | string[]) {
+        if (typeof allowedStartRules === "string") {
+            allowedStartRules = [allowedStartRules];
+        }
+        if (!allowedStartRules) {
+            // The default is for the allowed start rule to be the first rule in the grammar
+            allowedStartRules = [this.grammar.rules[0].name || "UNKNOWN_RULE"];
+        }
+        const allowedStartRuleSet: Set<string> = new Set();
+        for (const ruleName of allowedStartRules) {
+            // We don't know if they passed in the CamelCase name of the rule or the
+            // regular name of the rule. Since `this.nameMap` contains circular references
+            // of CamelCase -> regular and regular -> CamelCase, it is safe to add them both.
+            allowedStartRuleSet.add(ruleName);
+            allowedStartRuleSet.add(
+                this.nameMap.get(ruleName) || "UNKNOWN_RULE"
+            );
+        }
+
         const file = this.project.createSourceFile(
             "__types__.ts",
             TYPES_HEADER,
             { overwrite: true }
         );
 
-        file.addTypeAliases(
+        const declarations = file.addTypeAliases(
             this.grammar.rules.map((rule) => {
                 let type = this.getTypeForExpression(rule.expression);
                 if (this.options.removeReadonlyKeyword) {
@@ -146,6 +172,13 @@ export class TypeExtractor {
                 };
             })
         );
+
+        for (const declaration of declarations) {
+            const name = declaration.getName();
+            if (allowedStartRuleSet.has(name)) {
+                declaration.setIsExported(true);
+            }
+        }
 
         return this.formatter(file.getFullText());
     }
@@ -269,16 +302,16 @@ export class TypeExtractor {
             case "rule_ref":
                 return expr.name;
             case "optional":
-                return `(${this.getTypeForExpression(
-                    expr.expression
-                )}) | undefined`;
+                return `(${this.getTypeForExpression(expr.expression)}) | null`;
             case "zero_or_more":
             case "one_or_more":
                 return `(${this.getTypeForExpression(expr.expression)})[]`;
             case "choice":
-                return expr.alternatives
-                    .map((e) => `(${this.getTypeForExpression(e)})`)
-                    .join(" | ");
+                return formatUnionType(
+                    expr.alternatives.map(
+                        (e) => `(${this.getTypeForExpression(e)})`
+                    )
+                );
             case "sequence": {
                 // If a sequence has a pluck operator, the type is the type
                 // of that item. Otherwise, the type is an array of all items
