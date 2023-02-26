@@ -7,5 +7,6 @@ import svgrPlugin from "vite-plugin-svgr";
 export default defineConfig({
     base: "./",
     plugins: [react(), viteTsconfigPaths(), svgrPlugin()],
-    build: { sourcemap: true, minify: false },
+    // XXX Asking vite to build sourcemaps causes it to use too much ram, so builds fail
+    //build: { sourcemap: true, minify: true },
 });
