@@ -10,8 +10,8 @@ export type Location = {
 };
 
 export interface Grammar extends Node<"grammar"> {
-    ginitializer: Initializer;
-    initializer: GInitializer;
+    ginitializer: Initializer | undefined;
+    initializer: GInitializer | undefined;
     rules: Rule[];
     comments: Comment[];
 }

@@ -1,8 +1,12 @@
 import {
+    ArrayLiteralExpression,
     ArrowFunction,
     FunctionDeclaration,
     FunctionExpression,
     Node,
+    NumericLiteral,
+    ObjectLiteralExpression,
+    StringLiteral,
     ts,
     TypeNode,
 } from "ts-morph";
@@ -71,5 +75,26 @@ export function unionWithUndefined(typeNode: TypeNode) {
                 ts.SyntaxKind.UndefinedKeyword
             ),
         ])
+    );
+}
+
+/**
+ * Determine if `node` is a literal. E.g. `[5,6]` or `{a: 7}` or `"foo"`.
+ */
+export function isLiteral(
+    node: Node | undefined
+): node is
+    | ObjectLiteralExpression
+    | StringLiteral
+    | ArrayLiteralExpression
+    | NumericLiteral {
+    if (!node) {
+        return false;
+    }
+    return (
+        node.isKind(ts.SyntaxKind.ObjectLiteralExpression) ||
+        node.isKind(ts.SyntaxKind.StringLiteral) ||
+        node.isKind(ts.SyntaxKind.ArrayLiteralExpression) ||
+        node.isKind(ts.SyntaxKind.NumericLiteral)
     );
 }

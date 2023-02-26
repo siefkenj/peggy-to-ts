@@ -149,6 +149,20 @@ describe("Basic Parsing", () => {
             `type Start = "a"`
         );
     });
+    it("can identify a returned string as a type literal", () => {
+        const typeExtractor = new TypeExtractor(`Start = "a" { return "a"; }`);
+        typeExtractor.getTypes();
+        expect(typeExtractor.typeCache.get("Start")).toEqual(
+            `type Start = "a"`
+        );
+    });
+    it("can identify a returned number as a type literal", () => {
+        const typeExtractor = new TypeExtractor(`Start = "a" { return 7; }`);
+        typeExtractor.getTypes();
+        expect(typeExtractor.typeCache.get("Start")).toEqual(
+            `type Start = 7`
+        );
+    });
 });
 
 describe("Util tests", () => {

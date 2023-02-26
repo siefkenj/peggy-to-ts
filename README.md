@@ -112,3 +112,23 @@ type B = Mixed<"b", A>;
 
 is not an allowed type in typescript. So, `peggy-to-ts` goes out of its way to eliminate
 generics from the types that it generates.
+
+## Limitations
+
+PEGjs/Peggy actions are allowed to perform arbitrary transforms. Sometimes these
+transforms will result in Typescript types that are recursive in a way that Typescript
+cannot handle. For example,
+
+```pegjs
+Start = "a" / "(" s:Start ")" { return s }
+```
+
+results in
+
+```typescript
+type Start = "a" | Start;
+```
+
+Of course, we know by looking at the grammar that if the _correct_ type
+is `type Start = "a"`. However, `peggy-to-ts` is not currently able to
+deduce this. (If you have an idea about how to improve this case, please make a PR!)
