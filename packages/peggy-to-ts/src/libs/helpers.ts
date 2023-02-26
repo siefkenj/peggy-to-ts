@@ -96,3 +96,11 @@ export function isLiteral(
         node.isKind(ts.SyntaxKind.NumericLiteral)
     );
 }
+
+/**
+ * Returns a union type with all duplicate entries removed.
+ */
+export function formatUnionType(subtypes: string[]): string {
+    const uniqueTypes = Array.from(new Set(subtypes));
+    return uniqueTypes.join(" | ");
+}

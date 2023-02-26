@@ -1,6 +1,7 @@
 import { Project, ScriptTarget, ts } from "ts-morph";
 import { ActionExpression, Expression, Grammar, Rule } from "../types";
 import {
+    formatUnionType,
     getEnclosingFunction,
     isLiteral,
     wrapNodeInAsConstDeclaration,
@@ -306,9 +307,11 @@ export class TypeExtractor {
             case "one_or_more":
                 return `(${this.getTypeForExpression(expr.expression)})[]`;
             case "choice":
-                return expr.alternatives
-                    .map((e) => `(${this.getTypeForExpression(e)})`)
-                    .join(" | ");
+                return formatUnionType(
+                    expr.alternatives.map(
+                        (e) => `(${this.getTypeForExpression(e)})`
+                    )
+                );
             case "sequence": {
                 // If a sequence has a pluck operator, the type is the type
                 // of that item. Otherwise, the type is an array of all items
