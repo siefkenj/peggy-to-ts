@@ -67,13 +67,11 @@ export function makeTypeAnArray(typeNode: TypeNode) {
  * (E.g., if you obtained a reference via `typeDeclaration.getType()`, you must do so again,
  * because the old reference will be stale.)
  */
-export function unionWithUndefined(typeNode: TypeNode) {
-    return typeNode.transform((traversal) =>
-        traversal.factory.createUnionTypeNode([
+export function unionWithNull(typeNode: TypeNode) {
+    return typeNode.transform((t) =>
+        t.factory.createUnionTypeNode([
             typeNode.compilerNode,
-            traversal.factory.createKeywordTypeNode(
-                ts.SyntaxKind.UndefinedKeyword
-            ),
+            t.factory.createLiteralTypeNode(t.factory.createNull()),
         ])
     );
 }

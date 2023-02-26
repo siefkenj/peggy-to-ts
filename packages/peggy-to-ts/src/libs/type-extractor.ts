@@ -27,6 +27,9 @@ declare function text(): string;
 declare function location(): { source: string | undefined; start: { offset: number; line: number; column: number }; end: { offset: number; line: number; column: number } };
 declare function offset(): { offset: number; line: number; column: number };
 declare function range(): {source: string | undefined, start: number, end: number};
+
+// We need an export, otherwise typescript will insist that "location" refers to "window.location"
+export {};
 `;
 
 /**
@@ -70,7 +73,11 @@ export class TypeExtractor {
     grammar: Grammar;
     sourceHeader = SOURCE_HEADER;
     project = new Project({
-        compilerOptions: { allowJs: true, target: ScriptTarget.ESNext },
+        compilerOptions: {
+            allowJs: true,
+            target: ScriptTarget.ESNext,
+            strict: true,
+        },
         skipAddingFilesFromTsConfig: true,
         skipFileDependencyResolution: true,
         useInMemoryFileSystem: true,
@@ -271,7 +278,7 @@ export class TypeExtractor {
             case "optional":
                 return `(${this.getTypeForExpression(
                     expr.expression
-                )}) | undefined`;
+                )}) | null`;
             case "zero_or_more":
             case "one_or_more":
                 return `(${this.getTypeForExpression(expr.expression)})[]`;
