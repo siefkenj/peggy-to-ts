@@ -190,7 +190,8 @@ export class TypeExtractor {
     #renameGrammarRules() {
         const nameMap = this.nameMap;
         function rename(node: Grammar | Rule | Expression) {
-            switch (node.type) {
+            const type = node.type;
+            switch (type) {
                 case "grammar":
                     node.rules.forEach(rename);
                     break;
@@ -208,7 +209,7 @@ export class TypeExtractor {
                     rename(node.expression);
                     break;
                 case "choice":
-                    node.alternatives.map(rename);
+                    node.alternatives.forEach(rename);
                     break;
                 case "group":
                 case "labeled":
@@ -220,6 +221,25 @@ export class TypeExtractor {
                 case "text":
                     rename(node.expression);
                     break;
+                case "any":
+                case "semantic_and":
+                case "semantic_not":
+                case "literal":
+                case "class":
+                    break;
+                case "repeated":
+                    rename(node.expression);
+                    if (node.delimiter) {
+                        rename(node.delimiter);
+                    }
+                    break;
+                default: {
+                    const unused: never = type;
+                    console.warn(
+                        "Did not handle renaming of Peggy node with type",
+                        type
+                    );
+                }
             }
         }
         rename(this.grammar);
