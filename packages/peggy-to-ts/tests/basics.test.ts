@@ -202,11 +202,18 @@ describe("Basic Parsing", () => {
             `type Start = ["a", undefined]`
         );
     });
-    it("handles repetitions operator", () => {
+    it("handles repetition operator", () => {
         const typeExtractor = new TypeExtractor(`Start = "a"|4|`);
         typeExtractor.getTypes();
         expect(typeExtractor.typeCache.get("Start")).toEqual(
             `type Start = "a"[]`
+        );
+    });
+    it("renames rules referenced by repetition operator", () => {
+        const typeExtractor = new TypeExtractor(`Start = b|4|\nb="a"`);
+        typeExtractor.getTypes();
+        expect(typeExtractor.typeCache.get("Start")).toEqual(
+            `type Start = B[]`
         );
     });
 });
