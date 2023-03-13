@@ -202,6 +202,13 @@ describe("Basic Parsing", () => {
             `type Start = ["a", undefined]`
         );
     });
+    it("handles repetitions operator", () => {
+        const typeExtractor = new TypeExtractor(`Start = "a"|4|`);
+        typeExtractor.getTypes();
+        expect(typeExtractor.typeCache.get("Start")).toEqual(
+            `type Start = "a"[]`
+        );
+    });
 });
 
 describe("Util tests", () => {
