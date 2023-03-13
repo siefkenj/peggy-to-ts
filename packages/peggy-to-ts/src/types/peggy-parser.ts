@@ -84,7 +84,15 @@ type PrimaryExpression =
     | Node<"any">
     | RuleReference
     | SemanticPredicate
-    | Group;
+    | Group
+    | RepeatedExpression;
+
+export interface RepeatedExpression extends Node<"repeated"> {
+    min: Constant | Variable | FunctionNode | null;
+    max: Constant | Variable | FunctionNode | null;
+    expression: PrimaryExpression;
+    delimiter: Expression | null;
+}
 
 export interface CharacterClass extends Node<"class"> {
     parts: string[];
@@ -112,4 +120,14 @@ export interface ActionExpression extends Node<"action"> {
 
 export interface SequenceExpression extends Node<"sequence"> {
     elements: Expression[];
+}
+
+export interface Variable extends Node<"variable"> {
+    value: Identifier;
+}
+export interface Constant extends Node<"constant"> {
+    value: number;
+}
+export interface FunctionNode extends Node<"function"> {
+    value: string;
 }

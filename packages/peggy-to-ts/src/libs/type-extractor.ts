@@ -285,7 +285,8 @@ export class TypeExtractor {
      * A rule with definition `Foo = Bar / Baz` would be type `Bar | Baz`.
      */
     getTypeForExpression(expr: Expression): string {
-        switch (expr.type) {
+        const type = expr.type;
+        switch (type) {
             // For each of these, we cannot get a narrower type.
             // any == `.` matches any character
             // class == `[char-range]`
@@ -305,6 +306,7 @@ export class TypeExtractor {
                 return `(${this.getTypeForExpression(expr.expression)}) | null`;
             case "zero_or_more":
             case "one_or_more":
+            case "repeated":
                 return `(${this.getTypeForExpression(expr.expression)})[]`;
             case "choice":
                 return formatUnionType(
@@ -327,6 +329,8 @@ export class TypeExtractor {
             }
             case "simple_and":
             case "simple_not":
+            case "semantic_and":
+            case "semantic_not":
                 return "undefined";
             case "group":
                 return this.getTypeForExpression(expr.expression);
@@ -335,7 +339,12 @@ export class TypeExtractor {
             case "action":
                 return this._getTypeForAction(expr);
         }
-
+        const unknownType: never = type;
+        console.warn(
+            "Peggy node of type",
+            unknownType,
+            "is currently not processed"
+        );
         return "unknown";
     }
 
