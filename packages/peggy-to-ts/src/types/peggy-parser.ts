@@ -39,7 +39,6 @@ type Identifier = string;
 
 export interface StringLiteral extends Node<"stringliteral"> {
     value: string;
-    ignoreCase: boolean;
 }
 export interface Literal extends Node<"literal"> {
     value: string;
