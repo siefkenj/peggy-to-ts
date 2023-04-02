@@ -1,5 +1,4 @@
 import * as Comlink from "comlink";
-//import Worker from "worker-loader!"
 /* eslint-disable import/no-webpack-loader-syntax */
 //@ts-ignore
 import workerFactory from "./parsing-worker?worker";

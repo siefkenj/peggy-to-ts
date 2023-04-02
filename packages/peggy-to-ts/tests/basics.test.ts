@@ -1,5 +1,5 @@
 import util from "util";
-import { PeggyParser } from "../src/parser";
+import * as peggy from "peggy";
 import { listRuleNames } from "../src/libs/list-rules";
 import { TypeExtractor } from "../src/libs/type-extractor";
 import { snakeToCamel } from "../src/libs/snake-to-camel";
@@ -12,7 +12,7 @@ console.log = (...args) => {
     origLog(...args.map((x) => util.inspect(x, false, 10, true)));
 };
 
-const parse = PeggyParser.parse;
+const parse = (source: string) => peggy.generate(source, { output: "ast" });
 
 const SIMPLE_GRAMMAR = `
       // Simple Arithmetics Grammar
@@ -159,12 +159,12 @@ describe("Basic Parsing", () => {
     it("can identify a returned number as a type literal", () => {
         const typeExtractor = new TypeExtractor(`Start = "a" { return 7; }`);
         typeExtractor.getTypes();
-        expect(typeExtractor.typeCache.get("Start")).toEqual(
-            `type Start = 7`
-        );
+        expect(typeExtractor.typeCache.get("Start")).toEqual(`type Start = 7`);
     });
     it("returns the correct type for location()", () => {
-        const typeExtractor = new TypeExtractor(`Start = "a" { return location(); }`);
+        const typeExtractor = new TypeExtractor(
+            `Start = "a" { return location(); }`
+        );
         typeExtractor.getTypes();
         expect(typeExtractor.typeCache.get("Start")).toEqual(
             `type Start = {
