@@ -9,6 +9,7 @@ export function getUniqueName(
     let i = 1;
     while (nameMap.has(nameProposal)) {
         nameProposal = `${origProposal}_${i}`;
+        i++;
     }
     return nameProposal;
 }
