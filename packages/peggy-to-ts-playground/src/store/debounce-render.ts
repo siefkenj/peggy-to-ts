@@ -1,7 +1,6 @@
 import { Actions } from "easy-peasy";
-import { TypeExtractor } from "peggy-to-ts";
 import { parsingWorker } from "../worker/worker-wrapper";
-import { StoreModel } from "./model";
+import { Options, StoreModel } from "./model";
 
 let isInRender = false;
 let startOfLastRender = Date.now();
@@ -15,7 +14,7 @@ let renderQueue: string | null = null;
 export async function debounceRender(
     actions: Actions<StoreModel>,
     payload: string,
-    options: TypeExtractor["options"]
+    options: Options
 ) {
     renderQueue = payload;
     async function doRender() {

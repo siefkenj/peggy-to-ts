@@ -16,10 +16,17 @@ export function ResultsDisplay() {
         theme: { extension: EditorView.theme({ "&": { fontSize: "10pt" } }) },
     });
     const camelCaseNames = useStoreState((s) => s.options.camelCaseTypeNames);
+    const useTsPegjs = useStoreState((s) => s.options.useTsPegjs);
     const setOptions = useStoreActions((a) => a.setOptions);
     const setCamelCaseNames = React.useCallback(
         (value: boolean) => {
             setOptions({ camelCaseTypeNames: value });
+        },
+        [setOptions]
+    );
+    const setUseTsPegjs = React.useCallback(
+        (value: boolean) => {
+            setOptions({ useTsPegjs: value });
         },
         [setOptions]
     );
@@ -38,6 +45,17 @@ export function ResultsDisplay() {
                                 }}
                                 type="checkbox"
                                 label="Convert types to CamelCase"
+                            ></Form.Check>
+                        </Form.Group>
+                        <Form.Group controlId="useTsPegjs">
+                            <Form.Check
+                                checked={useTsPegjs}
+                                onChange={(e) => {
+                                    setUseTsPegjs(e.target.checked);
+                                }}
+                                type="checkbox"
+                                label="Use ts-pegjs"
+                                title="ts-pegjs is another library for converting PEG grammars to TypeScript. All functionality from this project has been merged into ts-pegjs, so there should be no downside to using it."
                             ></Form.Check>
                         </Form.Group>
                     </Form>
