@@ -1,6 +1,7 @@
 import util from "util";
 import { describe, it, expect } from "vitest";
 import { PeggyParser } from "../src/parser";
+import * as peggy from "peggy";
 import { listRuleNames } from "../src/libs/list-rules";
 import { TypeExtractor } from "../src/libs/type-extractor";
 import { snakeToCamel } from "../src/libs/snake-to-camel";
@@ -13,7 +14,7 @@ console.log = (...args) => {
     origLog(...args.map((x) => util.inspect(x, false, 10, true)));
 };
 
-const parse = PeggyParser.parse;
+const parse = (source: string) => peggy.generate(source, { output: "ast" });
 
 const SIMPLE_GRAMMAR = `
       // Simple Arithmetics Grammar
