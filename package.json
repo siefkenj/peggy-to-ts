@@ -11,22 +11,6 @@
         "build": "npm run build -ws",
         "test": "npm run test -ws"
     },
-    "jest": {
-        "transformIgnorePatterns": [
-            "node_modules/(?!unified|bail|is-plain-obj|trough|vfile.*|unist.*|hast.*|property-information|html-void-elements|.*-separated-tokens|.*entities.*|ccount|rehype*|string-width|strip-ansi|ansi-regex|supports-color|rehype|web-namespaces|zwitch)"
-        ],
-        "transform": {
-            "\\.m?jsx?$": "esbuild-jest",
-            "\\.pegjs$": "<rootDir>/packages/peggy-to-ts/tests/pegjs-preprocessor.mjs",
-            "^.+\\.tsx?$": "ts-jest"
-        },
-        "haste": {
-            "forceNodeFilesystemAPI": true
-        },
-        "modulePathIgnorePatterns": [
-            "/dist/"
-        ]
-    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/siefkenj/typescript-xml.git"
@@ -39,37 +23,34 @@
     "homepage": "https://github.com/siefkenj/typescript-xml#readme",
     "devDependencies": {
         "@types/glob": "^8.1.0",
-        "@types/jest": "^29.5.0",
-        "@types/node": "^18.15.11",
-        "@vitejs/plugin-react": "^3.1.0",
-        "esbuild": "^0.17.15",
-        "esbuild-jest": "^0.5.0",
+        "@types/node": "^20.5.9",
+        "@vitejs/plugin-react": "^4.0.4",
+        "esbuild": "^0.19.2",
         "esbuild-runner": "^2.2.2",
-        "jest": "^29.5.0",
-        "mkdirp": "^2.1.6",
-        "prettier-plugin-pegjs": "^1.0.1",
-        "ts-jest": "^29.1.0",
-        "typescript": "^5.0.3",
-        "vite": "^4.2.1",
-        "vite-plugin-svgr": "^2.4.0",
-        "vite-tsconfig-paths": "^4.0.7"
+        "mkdirp": "^3.0.1",
+        "prettier-plugin-pegjs": "^2.0.2",
+        "typescript": "^5.2.2",
+        "vite": "^4.4.9",
+        "vite-plugin-svgr": "^3.2.0",
+        "vite-tsconfig-paths": "^4.2.0"
     },
     "dependencies": {
-        "@codemirror/lang-javascript": "^6.1.4",
-        "@codemirror/language": "^6.6.0",
-        "@codemirror/legacy-modes": "^6.3.2",
-        "@codemirror/view": "^6.9.3",
-        "@types/react": "^18.0.32",
-        "@types/react-dom": "^18.0.11",
-        "@uiw/react-codemirror": "^4.19.11",
+        "@codemirror/lang-javascript": "^6.2.1",
+        "@codemirror/language": "^6.9.0",
+        "@codemirror/legacy-modes": "^6.3.3",
+        "@codemirror/view": "^6.17.1",
+        "@types/react": "^18.2.21",
+        "@types/react-dom": "^18.2.7",
+        "@uiw/react-codemirror": "^4.21.13",
         "comlink": "^4.4.1",
         "easy-peasy": "^5.2.0",
         "peggy": "^3.0.2",
-        "prettier": "^2.8.7",
+        "prettier": "^3.0.3",
         "react": "^18.2.0",
-        "react-bootstrap": "^2.7.2",
+        "react-bootstrap": "^2.8.0",
         "react-dom": "^18.2.0",
-        "ts-morph": "^18.0.0",
-        "web-vitals": "^3.3.0"
+        "ts-morph": "^19.0.0",
+        "vitest": "^0.34.3",
+        "web-vitals": "^3.4.0"
     }
 }

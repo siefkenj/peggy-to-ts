@@ -36,7 +36,12 @@ export const store = createStore<StoreModel>({
     setGeneratedTypes: action((state, payload) => {
         state.generatedTypes = payload;
     }),
-    options: { camelCaseTypeNames: true, removeReadonlyKeyword: true },
+    options: {
+        camelCaseTypeNames: true,
+        removeReadonlyKeyword: true,
+        useTsPegjs: true,
+        generateFullParser: false,
+    },
     _setOptions: action((state, payload) => {
         Object.assign(state.options, payload);
     }),

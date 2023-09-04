@@ -1,6 +1,6 @@
 {
     "name": "peggy-to-ts",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "description": "Generate Typescript types from PEGjs/Peggy grammars",
     "main": "dist/index.js",
     "type": "module",
@@ -19,23 +19,7 @@
         "build": "npm run clean && mkdirp ./dist && npm run compile",
         "clean": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
         "compile": "tsc -b tsconfig.json & node build.js & wait",
-        "test": "jest"
-    },
-    "jest": {
-        "transformIgnorePatterns": [
-            "node_modules/(?!unified|bail|is-plain-obj|trough|vfile.*|unist.*|hast.*|property-information|html-void-elements|.*-separated-tokens|.*entities.*|ccount|rehype*|string-width|strip-ansi|ansi-regex|supports-color|rehype|web-namespaces|zwitch)"
-        ],
-        "transform": {
-            "\\.m?jsx?$": "esbuild-jest",
-            "\\.peg(js|gy)$": "<rootDir>/tests/pegjs-preprocessor.mjs",
-            "^.+\\.tsx?$": "ts-jest"
-        },
-        "haste": {
-            "forceNodeFilesystemAPI": true
-        },
-        "modulePathIgnorePatterns": [
-            "/dist/"
-        ]
+        "test": "vitest"
     },
     "repository": {
         "type": "git",
@@ -48,20 +32,17 @@
     },
     "homepage": "https://github.com/siefkenj/peggy-to-ts#readme",
     "devDependencies": {
-        "@types/jest": "^29.5.0",
-        "@types/node": "^18.15.11",
-        "esbuild": "^0.17.15",
-        "esbuild-jest": "^0.5.0",
+        "@types/node": "^20.5.9",
+        "esbuild": "^0.19.2",
         "esbuild-runner": "^2.2.2",
-        "jest": "^29.5.0",
-        "mkdirp": "^2.1.6",
-        "prettier-plugin-pegjs": "^1.0.1",
-        "ts-jest": "^29.1.0",
-        "typescript": "^5.0.3"
+        "jest": "^29.6.4",
+        "mkdirp": "^3.0.1",
+        "prettier-plugin-pegjs": "^2.0.2",
+        "typescript": "^5.2.2"
     },
     "dependencies": {
-        "prettier": "^2.8.7",
+        "prettier": "^3.0.3",
         "peggy": "^3.0.2",
-        "ts-morph": "^18.0.0"
+        "ts-morph": "^19.0.0"
     }
 }

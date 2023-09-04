@@ -26,7 +26,7 @@ This project uses npm workspaces. The type generation code is found in `packages
 
 ```typescript
 const typeExtractor = new TypeExtractor(grammarSourceCode);
-console.log("The generated types are:", typeExtractor.getTypes());
+console.log("The generated types are:", await typeExtractor.getTypes());
 ```
 
 By default, the type of the first rule is the only exported rule. To export other
