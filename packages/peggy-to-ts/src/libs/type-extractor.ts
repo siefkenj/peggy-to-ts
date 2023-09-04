@@ -8,7 +8,8 @@ import {
     wrapNodeInAsConstDeclaration,
 } from "./helpers";
 import prettier from "prettier/standalone";
-import * as prettierPluginTypescript from "prettier/parser-typescript";
+import * as prettierPluginTypescript from "prettier/plugins/typescript";
+import * as prettierPluginEstree from "prettier/plugins/estree";
 import { snakeToCamel } from "./snake-to-camel";
 import { getUniqueName } from "./get-unique-name";
 
@@ -72,7 +73,7 @@ type TypeExtractorOptions = {
  * Example usage
  * ```
  * const typeExtractor = new TypeExtractor(peggyGrammar);
- * const fullTypescriptTypes = typeExtractor.getTypes();
+ * const fullTypescriptTypes = await typeExtractor.getTypes();
  * const specificTypeForGrammarRule = typeExtractor.typeCache.get("RuleName");
  * ```
  */
@@ -95,11 +96,11 @@ export class TypeExtractor {
         removeReadonlyKeyword: true,
         camelCaseTypeNames: true,
     };
-    formatter = (str: string) => {
+    formatter = async (str: string) => {
         try {
-            return prettier.format(str, {
+            return await prettier.format(str, {
                 parser: "typescript",
-                plugins: [prettierPluginTypescript],
+                plugins: [prettierPluginTypescript, prettierPluginEstree],
             });
         } catch (e) {
             console.warn(
@@ -124,7 +125,7 @@ export class TypeExtractor {
     /**
      * Create typescript source code for the types in the grammar.
      */
-    getTypes(allowedStartRules?: string | string[]) {
+    async getTypes(allowedStartRules?: string | string[]) {
         if (typeof allowedStartRules === "string") {
             allowedStartRules = [allowedStartRules];
         }
@@ -150,33 +151,37 @@ export class TypeExtractor {
         );
 
         const declarations = file.addTypeAliases(
-            this.grammar.rules.map((rule) => {
-                let type = this.getTypeForExpression(rule.expression);
-                if (this.options.removeReadonlyKeyword) {
-                    type = type.replace(/readonly\s/g, "");
-                }
-                // Save the type in case we want to retrieve individual rules later (e.g., for testing)
-                let typeCacheString = `type ${rule.name} = ${type}`;
-                try {
-                    typeCacheString = this.formatter(typeCacheString).trim();
-                    if (typeCacheString.endsWith(";")) {
-                        typeCacheString = typeCacheString.slice(
-                            0,
-                            typeCacheString.length - 1
-                        );
+            await Promise.all(
+                this.grammar.rules.map(async (rule) => {
+                    let type = this.getTypeForExpression(rule.expression);
+                    if (this.options.removeReadonlyKeyword) {
+                        type = type.replace(/readonly\s/g, "");
                     }
-                } catch {}
-                this.typeCache.set(rule.name, typeCacheString);
-                this.typeCache.set(
-                    this.nameMap.get(rule.name) || "UNKNOWN",
-                    typeCacheString
-                );
+                    // Save the type in case we want to retrieve individual rules later (e.g., for testing)
+                    let typeCacheString = `type ${rule.name} = ${type}`;
+                    try {
+                        typeCacheString = (
+                            await this.formatter(typeCacheString)
+                        ).trim();
+                        if (typeCacheString.endsWith(";")) {
+                            typeCacheString = typeCacheString.slice(
+                                0,
+                                typeCacheString.length - 1
+                            );
+                        }
+                    } catch {}
+                    this.typeCache.set(rule.name, typeCacheString);
+                    this.typeCache.set(
+                        this.nameMap.get(rule.name) || "UNKNOWN",
+                        typeCacheString
+                    );
 
-                return {
-                    name: rule.name,
-                    type,
-                };
-            })
+                    return {
+                        name: rule.name,
+                        type,
+                    };
+                })
+            )
         );
 
         for (const declaration of declarations) {
