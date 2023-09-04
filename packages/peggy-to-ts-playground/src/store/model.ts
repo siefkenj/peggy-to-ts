@@ -2,7 +2,10 @@ import { Action, Thunk } from "easy-peasy";
 import { TypeExtractor } from "peggy-to-ts";
 import { ParseError } from "../worker/errors";
 
-export type Options = TypeExtractor["options"] & {useTsPegjs: boolean}
+export type Options = TypeExtractor["options"] & {
+    useTsPegjs: boolean;
+    generateFullParser: boolean;
+};
 
 export interface StoreModel {
     editorText: string;

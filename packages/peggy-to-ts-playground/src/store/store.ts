@@ -40,6 +40,7 @@ export const store = createStore<StoreModel>({
         camelCaseTypeNames: true,
         removeReadonlyKeyword: true,
         useTsPegjs: true,
+        generateFullParser: false,
     },
     _setOptions: action((state, payload) => {
         Object.assign(state.options, payload);

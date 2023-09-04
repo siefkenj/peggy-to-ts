@@ -17,6 +17,9 @@ export function ResultsDisplay() {
     });
     const camelCaseNames = useStoreState((s) => s.options.camelCaseTypeNames);
     const useTsPegjs = useStoreState((s) => s.options.useTsPegjs);
+    const generateFullParser = useStoreState(
+        (s) => s.options.generateFullParser
+    );
     const setOptions = useStoreActions((a) => a.setOptions);
     const setCamelCaseNames = React.useCallback(
         (value: boolean) => {
@@ -27,6 +30,12 @@ export function ResultsDisplay() {
     const setUseTsPegjs = React.useCallback(
         (value: boolean) => {
             setOptions({ useTsPegjs: value });
+        },
+        [setOptions]
+    );
+    const setGenerateFullParser = React.useCallback(
+        (value: boolean) => {
+            setOptions({ generateFullParser: value });
         },
         [setOptions]
     );
@@ -47,17 +56,32 @@ export function ResultsDisplay() {
                                 label="Convert types to CamelCase"
                             ></Form.Check>
                         </Form.Group>
-                        <Form.Group controlId="useTsPegjs">
-                            <Form.Check
-                                checked={useTsPegjs}
-                                onChange={(e) => {
-                                    setUseTsPegjs(e.target.checked);
-                                }}
-                                type="checkbox"
-                                label="Use ts-pegjs"
-                                title="ts-pegjs is another library for converting PEG grammars to TypeScript. All functionality from this project has been merged into ts-pegjs, so there should be no downside to using it."
-                            ></Form.Check>
-                        </Form.Group>
+                        <div style={{ display: "flex", gap: "1em" }}>
+                            {" "}
+                            <Form.Group controlId="useTsPegjs">
+                                <Form.Check
+                                    checked={useTsPegjs}
+                                    onChange={(e) => {
+                                        setUseTsPegjs(e.target.checked);
+                                    }}
+                                    type="checkbox"
+                                    label="Use ts-pegjs"
+                                    title="ts-pegjs is another library for converting PEG grammars to TypeScript. All functionality from this project has been merged into ts-pegjs, so there should be no downside to using it."
+                                ></Form.Check>
+                            </Form.Group>
+                            <Form.Group controlId="generateFullParser">
+                                <Form.Check
+                                    checked={generateFullParser}
+                                    onChange={(e) => {
+                                        setGenerateFullParser(e.target.checked);
+                                    }}
+                                    disabled={!useTsPegjs}
+                                    type="checkbox"
+                                    label="Generate full parser"
+                                    title="When checked, output the full source code of the parser instead of just the types"
+                                ></Form.Check>
+                            </Form.Group>
+                        </div>
                     </Form>
                 </Row>
             </Card.Header>

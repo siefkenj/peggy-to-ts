@@ -31,7 +31,7 @@ async function typesWithPeggyToTs(s: string, options?: Options) {
 
 async function typesWithTsPegjs(s: string, options?: Options) {
     const tspegjs: TsPegjsOptions = {
-        onlyGenerateGrammarTypes: true,
+        onlyGenerateGrammarTypes: options?.generateFullParser === false,
         doNotCamelCaseTypes: options?.camelCaseTypeNames === false,
     };
     try {
